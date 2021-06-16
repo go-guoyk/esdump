@@ -34,10 +34,12 @@ func main() {
 	}(&err)
 
 	var (
-		optURL   string
-		optIndex string
-		optQuery string
-		optSort  string
+		optURL         string
+		optIndex       string
+		optQuery       string
+		optSort        string
+		optScroll      string
+		optMappingType string
 
 		optSortDesc bool
 	)
@@ -45,6 +47,8 @@ func main() {
 	flag.StringVar(&optIndex, "index", "logstash", "elasticsearch index to query")
 	flag.StringVar(&optURL, "url", "http://127.0.0.1:9200", "elasticsearch connection url")
 	flag.StringVar(&optQuery, "query", "", "elasticsearch query")
+	flag.StringVar(&optMappingType, "mapping-type", "", "mapping type")
+	flag.StringVar(&optScroll, "scroll", "", "scroll window")
 	flag.StringVar(&optSort, "sort", "timestamp", "sort field")
 	flag.Parse()
 
@@ -61,6 +65,12 @@ func main() {
 	bs := client.Scroll(strings.Split(optIndex, ",")...)
 	if optQuery != "" {
 		bs = bs.Query(WildcardQuery{src: optQuery})
+	}
+	if optMappingType != "" {
+		bs = bs.Type(strings.Split(optMappingType, ",")...)
+	}
+	if optScroll != "" {
+		bs = bs.Scroll(optScroll)
 	}
 	bs = bs.Sort(optSort, !optSortDesc)
 
