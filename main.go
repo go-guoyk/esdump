@@ -40,6 +40,7 @@ func main() {
 		optSort        string
 		optScroll      string
 		optMappingType string
+		optSize        int
 
 		optSortDesc bool
 	)
@@ -50,6 +51,7 @@ func main() {
 	flag.StringVar(&optMappingType, "mapping-type", "", "mapping type")
 	flag.StringVar(&optScroll, "scroll", "", "scroll window")
 	flag.StringVar(&optSort, "sort", "timestamp", "sort field")
+	flag.IntVar(&optSize, "size", 0, "size of bulk")
 	flag.Parse()
 
 	if strings.HasPrefix(optSort, "-") {
@@ -71,6 +73,9 @@ func main() {
 	}
 	if optScroll != "" {
 		bs = bs.Scroll(optScroll)
+	}
+	if optSize != 0 {
+		bs = bs.Size(optSize)
 	}
 	bs = bs.Sort(optSort, !optSortDesc)
 
