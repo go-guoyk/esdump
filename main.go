@@ -58,7 +58,11 @@ func main() {
 		return
 	}
 
-	bs := client.Scroll(strings.Split(optIndex, ",")...).Query(WildcardQuery{src: optQuery}).Sort(optSort, !optSortDesc)
+	bs := client.Scroll(strings.Split(optIndex, ",")...)
+	if optQuery != "" {
+		bs = bs.Query(WildcardQuery{src: optQuery})
+	}
+	bs = bs.Sort(optSort, !optSortDesc)
 
 	var res *elastic.SearchResult
 	for {
