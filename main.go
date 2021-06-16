@@ -78,6 +78,7 @@ func main() {
 	for {
 		if res, err = bs.Do(context.Background()); err != nil {
 			if err == io.EOF {
+				log.Println("found EOF")
 				err = nil
 				break
 			} else {
